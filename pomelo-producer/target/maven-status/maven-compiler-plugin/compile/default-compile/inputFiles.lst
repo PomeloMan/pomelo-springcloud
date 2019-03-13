@@ -1,0 +1,6 @@
+E:\eclipse\iworkspace\pomelo-springcloud\pomelo-producer\src\main\java\pomelo\producer\Application.java
+E:\eclipse\iworkspace\pomelo-springcloud\pomelo-producer\src\main\java\pomelo\producer\core\module\sys\controller\UserController.java
+E:\eclipse\iworkspace\pomelo-springcloud\pomelo-producer\src\main\java\pomelo\producer\core\module\sys\service\UserService.java
+E:\eclipse\iworkspace\pomelo-springcloud\pomelo-producer\src\main\java\pomelo\producer\core\module\sys\service\interfaces\IUserService.java
+E:\eclipse\iworkspace\pomelo-springcloud\pomelo-producer\src\main\java\pomelo\producer\core\module\sys\persistence\entity\User.java
+E:\eclipse\iworkspace\pomelo-springcloud\pomelo-producer\src\main\java\pomelo\producer\core\module\sys\persistence\repo\UserRepository.java

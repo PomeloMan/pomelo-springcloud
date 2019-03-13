@@ -1,0 +1,19 @@
+server:
+  port: 8761
+
+eureka:
+  instance:
+    hostname: peer1
+  client:
+    service-url:
+      defaultZone: http://pomelo:pomelo@peer2:8762/eureka/
+
+spring:
+  application:
+    name: eureka-server
+  security:
+    basic:
+      enabled: true
+    user:
+      name: pomelo
+      password: pomelo

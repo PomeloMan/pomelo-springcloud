@@ -1,0 +1,28 @@
+# https://docs.spring.io/spring-boot/docs/2.1.3.RELEASE/reference/htmlsingle/
+eureka:
+   client:
+      enable: true                                            #启用eureka客户端
+      registry-fetch-interval-seconds: 30                     #从eureka服务端获取注册信息的间隔时间，单位为秒
+      instance-info-replication-interval-seconds: 30          #更新实例信息的变化到eureka服务端的间隔时间，单位为秒
+      initial-instance-info-replication-interval-seconds: 40  #初始化实例信息到eureka服务端的时间间隔，单位为秒
+      eureka-service-url-poll-interval-seconds: 300           #轮询eureka服务端地址更改的间隔时间，单位为秒。当我们与Spring Cloud Config配合，动态刷新Eureka的serviceURL地址时需要关注该参数
+      eureka-server-read-timeout-seconds: 8                   #读取eureka信息超时时间，单位为秒
+      eureka-server-connect-timeout-seconds: 5                #链接eureka超时时间，单位为秒
+      eureka-server-total-connections: 200                    #从eureka客户端到所有eureka服务器的连接总数
+      eureka-server-total-connections-per-host: 50            #从eureka客户端到每个eureka主机的连接总数
+      eureka-connection-idle-timeout-seconds: 30              #eureka服务器连接的空闲关闭时间，单位为秒
+      heartbeat-executor-thread-pool-size: 2                  #心跳连接池的初始化线程数
+      heartbeat-executor-exponential-back-off-bound: 10       #心跳超时重试延迟时间的最大乘数值
+      cache-refresh-executor-thread-pool-size: 2              #缓存刷新线程池的初始化线程数
+      cache-refresh-executor-exponential-back-off-bound: 10   #缓存刷新重试延迟时间的最大乘值
+      use-dns-for-fetching-service-urls: false                #使用dns来获取eureka服务端的serviceUrl
+      register-with-eureka: true                              #是否要将自身的实例信息注册到eureka服务端
+      prefer-same-zone-eureka: true                           #是否偏好使用处于相同zone的eureka服务端	
+      filter-only-up-instances: true                          #获取实例时是否过滤，仅保留up状态的实例
+      fetch-registry: true                                    #是否从eureka服务端获取注册信息
+   instance:
+      prefer-ip-address: false                                #是否优先使用IP地址作为主机名的标识
+      lease-renewal-interval-in-seconds: 30                   #Eureka客户端想服务端发送心跳的时间间隔，单位为秒
+      lease-expiration-duration-in-seconds: 90                #Eureka服务端在收到最后一次心跳之后的等待时间的时间上限，单位为秒。超过该时间之后服务端会将该服务实例从服务清单中剔除，从而禁止服务调用请求被发送到该实例上
+      appname: unknown                                        #服务名，默认取spring.application.name的配置值，如果没有则为unknown
+      virtual-host-name:                                      #主机名，不配置的时候将根据操作系统的主机名来获取
