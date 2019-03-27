@@ -15,15 +15,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+
 import feign.Client;
 import feign.Contract;
-import feign.Feign;
 import feign.Logger.Level;
 import feign.auth.BasicAuthRequestInterceptor;
 import feign.codec.Decoder;
 import feign.codec.Encoder;
+import feign.hystrix.HystrixFeign;
 import pomelo.consumer.core.module.sys.persistence.entity.User;
 import pomelo.consumer.feign.ProducerFeignClient;
+import pomelo.consumer.feign.callback.ProducerFeignClientFallback;
 
 @Import(FeignClientsConfiguration.class)
 @RestController
@@ -41,16 +44,23 @@ public class UserController {
 
 	@Autowired
 	public UserController(Decoder decoder, Encoder encoder, Client client, Contract contract) {
-		this.producerFeignClient = Feign.builder().client(client).encoder(encoder).decoder(decoder).contract(contract)
-				.logLevel(Level.FULL).logger(new feign.Logger.JavaLogger().appendToFile("logs\\feign.log"))
+		// HystrixFeign.builder() / Feign.builder()
+		this.producerFeignClient = HystrixFeign.builder().client(client).encoder(encoder).decoder(decoder)
+				.contract(contract).logLevel(Level.FULL)
+				.logger(new feign.Logger.JavaLogger().appendToFile("logs\\feign.log"))
 				.requestInterceptor(new BasicAuthRequestInterceptor("pomelo", "pomelo"))
-				.target(ProducerFeignClient.class, "http://pomelo-producer/");
+				.target(ProducerFeignClient.class, "http://pomelo-producer/", new ProducerFeignClientFallback());
 	}
 
 	@GetMapping("/{username}")
+	@HystrixCommand(fallbackMethod = "infoFallback")
 	public ResponseEntity<User> info(@PathVariable String username) {
 		return new ResponseEntity<User>(
 				this.restTemplate.getForObject("http://pomelo-producer/user/" + username, User.class), HttpStatus.OK);
+	}
+
+	public ResponseEntity<User> infoFallback(String username) {
+		return new ResponseEntity<User>(new User(), HttpStatus.OK);
 	}
 
 	@GetMapping("/feign/{username}")

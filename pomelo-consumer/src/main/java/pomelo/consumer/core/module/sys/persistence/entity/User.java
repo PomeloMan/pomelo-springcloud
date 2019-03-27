@@ -13,6 +13,17 @@ public class User implements Serializable {
 	private String avatar;
 	private String email;
 	private Integer gender;// 0:male / 1:female
+	private Integer status;
+
+	public User(String username, Integer status) {
+		super();
+		this.username = username;
+		this.status = status;
+	}
+
+	public User() {
+		super();
+	}
 
 	public String getUsername() {
 		return username;
@@ -60,6 +71,14 @@ public class User implements Serializable {
 
 	public void setGender(Integer gender) {
 		this.gender = gender;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 
 }
