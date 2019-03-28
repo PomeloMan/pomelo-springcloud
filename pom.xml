@@ -49,5 +49,6 @@
 		<module>pomelo-producer</module>
 		<module>pomelo-consumer</module>
 		<module>pomelo-hystrix-dashboard</module>
+		<module>pomelo-zipkin-server</module>
 	</modules>
 </project>
