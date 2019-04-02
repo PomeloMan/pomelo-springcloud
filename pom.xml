@@ -50,5 +50,7 @@
 		<module>pomelo-consumer</module>
 		<module>pomelo-hystrix-dashboard</module>
 		<module>pomelo-zipkin-server</module>
+		<module>pomelo-stream-producer</module>
+		<module>pomelo-stream-consumer</module>
 	</modules>
 </project>

@@ -1,0 +1,31 @@
+server:
+  port: 8200
+
+eureka:
+   client:
+      serviceUrl:
+         defaultZone: http://pomelo:pomelo@peer1:8761/eureka/,http://pomelo:pomelo@peer2:8762/eureka/
+   instance:
+      prefer-ip-Address: true
+
+spring:
+  application:
+    name: pomelo-stream-consumer
+  cloud:
+    stream:
+      binders:
+        default-rabbit:
+          type: rabbit
+          environment:
+            spring:
+              rabbitmq:
+                addresses: 127.0.0.1
+                port: 5672
+                username: pomelor
+                password: pomelor
+                virtual-host: /
+      bindings:
+        defaultInput:
+          destination: default.exchange
+          content-type: application/json
+          default-binder: default-rabbit
