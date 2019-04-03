@@ -13,6 +13,7 @@ spring:
     name: pomelo-stream-producer
   cloud:
     stream:
+      # https://cloud.spring.io/spring-cloud-stream-binder-rabbit/spring-cloud-stream-binder-rabbit.html#_rabbit_producer_properties
       binders:
         default-rabbit:
           type: rabbit
@@ -29,3 +30,8 @@ spring:
           destination: default.exchange
           content-type: application/json
           default-binder: default-rabbit
+      rabbit:
+        bindings:
+          defaultOutput:
+            producer:
+              routingKeyExpression: '''log.*'''

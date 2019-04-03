@@ -12,6 +12,7 @@ spring:
   application:
     name: pomelo-stream-consumer
   cloud:
+    # https://cloud.spring.io/spring-cloud-stream-binder-rabbit/spring-cloud-stream-binder-rabbit.html#_rabbitmq_consumer_properties
     stream:
       binders:
         default-rabbit:
@@ -29,3 +30,9 @@ spring:
           destination: default.exchange
           content-type: application/json
           default-binder: default-rabbit
+          group: default-group #持久化，不分组则广播消息（所有消费者都能收到生产者消息）
+      rabbit:
+        bindings:
+          defaultInput:
+             consumer:
+                bindingRoutingKey: log.*
