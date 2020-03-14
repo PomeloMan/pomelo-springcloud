@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import pomelo.log.sdk.annotation.LogOperation;
 import pomelo.server.user.core.persistence.entity.User;
 import pomelo.server.user.core.service.interfaces.IUserService;
 import pomelo.server.user.core.view.IPage;
 import pomelo.server.user.core.view.IUser;
+import pomelo.server.user.log.annotation.LogOperation;
 
 @RestController
 @RequestMapping("/user")

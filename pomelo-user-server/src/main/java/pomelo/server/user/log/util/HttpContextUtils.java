@@ -1,4 +1,4 @@
-package pomelo.log.sdk.util;
+package pomelo.server.user.log.util;
 
 import java.util.Enumeration;
 import java.util.HashMap;

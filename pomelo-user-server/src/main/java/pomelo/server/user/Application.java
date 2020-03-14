@@ -1,14 +1,15 @@
-package pomelo;
+package pomelo.server.user;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * 人员服务（用户，角色，菜单）
+ * 
  * @author FengChao
  */
 //@EnableDiscoveryClient
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = { "pomelo.server.user" })
 public class Application {
 
 	public static void main(String[] args) {

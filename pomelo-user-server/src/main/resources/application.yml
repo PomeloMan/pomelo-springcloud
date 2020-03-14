@@ -40,8 +40,4 @@ spring:
             format_sql: true
 logging:
    config: classpath:logback-spring.xml
-   logback:
-      level: info
-      path: logs
-      appname: pomelo-user-server
-      maxHistory: 30 # 文件保留30天
+   path: logs

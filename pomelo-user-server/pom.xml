@@ -100,12 +100,6 @@
 			<artifactId>guava</artifactId>
 			<version>${guava.version}</version>
 		</dependency>
-
-		<dependency>
-			<groupId>pomeloman</groupId>
-			<artifactId>pomelo-log-sdk</artifactId>
-			<version>0.0.1</version>
-		</dependency>
 	</dependencies>
 
 	<build>

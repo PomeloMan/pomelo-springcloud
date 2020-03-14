@@ -1,12 +1,12 @@
-package pomelo.log.sdk.service;
+package pomelo.server.user.log.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import pomelo.log.sdk.persistence.entity.Log;
-import pomelo.log.sdk.persistence.repo.LogRepository;
-import pomelo.log.sdk.service.interfaces.ILogService;
+import pomelo.server.user.log.persistence.entity.Log;
+import pomelo.server.user.log.persistence.repo.LogRepository;
+import pomelo.server.user.log.service.interfaces.ILogService;
 
 @Service
 public class LogService implements ILogService {

@@ -1,4 +1,4 @@
-package pomelo.log.sdk.annotation;
+package pomelo.server.user.log.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

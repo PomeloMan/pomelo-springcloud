@@ -1,8 +1,8 @@
-package pomelo.log.sdk.service.interfaces;
+package pomelo.server.user.log.service.interfaces;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import pomelo.log.sdk.persistence.entity.Log;
+import pomelo.server.user.log.persistence.entity.Log;
 
 @Transactional(readOnly = true)
 public interface ILogService {

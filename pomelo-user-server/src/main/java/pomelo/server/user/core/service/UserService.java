@@ -139,7 +139,7 @@ public class UserService implements IUserService {
 	@Override
 	public User saveOne(User entity) {
 		Assert.notNull(entity, "");
-		Assert.notNull(entity.getUsername(), "");
+		Assert.notNull(entity.getUsername().equals("") ? null : entity.getUsername(), "");
 		User _entity = userRep.findById(entity.getUsername()).orElse(null);
 		if (_entity != null) {
 			entity.setVersion(_entity.getVersion());

@@ -1,9 +1,9 @@
-package pomelo.log.sdk.persistence.repo;
+package pomelo.server.user.log.persistence.repo;
 
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 
-import pomelo.log.sdk.persistence.entity.LogError;
+import pomelo.server.user.log.persistence.entity.LogError;
 
 public interface LogErrorRepository extends CrudRepository<LogError, String>, JpaSpecificationExecutor<LogError> {
 

@@ -1,4 +1,4 @@
-package pomelo.log.sdk.annotation.aspect;
+package pomelo.server.user.log.annotation.aspect;
 
 import java.lang.reflect.Method;
 
@@ -16,11 +16,10 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 
-import pomelo.log.sdk.annotation.LogOperation;
-import pomelo.log.sdk.enums.Status;
-import pomelo.log.sdk.persistence.entity.Log;
-import pomelo.log.sdk.service.interfaces.ILogService;
-import pomelo.log.sdk.util.HttpContextUtils;
+import pomelo.server.user.log.annotation.LogOperation;
+import pomelo.server.user.log.persistence.entity.Log;
+import pomelo.server.user.log.service.interfaces.ILogService;
+import pomelo.server.user.log.util.HttpContextUtils;
 import pomelo.util.http.IpUtils;
 
 @Aspect
@@ -35,7 +34,7 @@ public class LogOperationAspect {
 	@Autowired
 	private ILogService logService;
 
-	@Pointcut("@annotation(pomelo.log.sdk.annotation.LogOperation)")
+	@Pointcut("@annotation(pomelo.server.user.log.annotation.LogOperation)")
 	public void logPointCut() {
 	}
 
@@ -46,10 +45,10 @@ public class LogOperationAspect {
 		try {
 			// 执行方法
 			Object result = point.proceed();
-			status = Status.SUCCESS.value();
+			status = 1;
 			return result;
 		} catch (Exception e) {
-			status = Status.FAILURE.value();
+			status = 0;
 			throw e;
 		} finally {
 			// 执行时长(毫秒)
