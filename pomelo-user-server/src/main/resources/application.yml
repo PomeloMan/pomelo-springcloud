@@ -1,11 +1,11 @@
 server:
    port: 8100
-#eureka:
-#   client:
-#      serviceUrl:
-#         defaultZone: http://pomelo:pomelo@peer1:8761/eureka/,http://pomelo:pomelo@peer2:8762/eureka/
-#   instance:
-#      prefer-ip-Address: true
+eureka:
+   client:
+      serviceUrl:
+         defaultZone: http://pomelo:pomelo@localhost:8760/eureka/
+   instance:
+      prefer-ip-Address: true
 spring:
    application:
       name: pomelo-user-server

@@ -1,6 +1,5 @@
 package pomelo.server.user.core.controller;
 
-import java.security.Principal;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,44 +30,28 @@ public class UserController {
 	@Autowired
 	IUserService userService;
 
-	/**
-	 * @param principal
-	 * @param user {@link CurrentUserHandlerMethodArgumentResolver.class} 自定义注解方法参数，返回处理后的数据
-	 * @return
-	 */
-	@GetMapping("/me")
-	@ApiOperation(value = "me")
-	public Principal user(Principal principal, User user) {
-		return principal;
-	}
-
-	/**
-	 * @param iuser
-	 * @return
-	 */
 	@PostMapping("list")
-	@ApiOperation(value = "list")
-	public ResponseEntity<Collection<User>> list(
-			@RequestBody IUser view) {
+	@ApiOperation(value = "用户列表")
+	public ResponseEntity<Collection<User>> list(@RequestBody IUser view) {
 		return new ResponseEntity<Collection<User>>(userService.query(view), HttpStatus.OK);
 	}
 
-	/**
-	 * @param view
-	 * @return
-	 * @PreAuthorize.hasPermission {@link pomelo.core.configure.authentication.DefaultPermissionEvaluator.java}
-	 */
 	@PostMapping("page")
-	@ApiOperation(value = "page")
+	@ApiOperation(value = "用户分页")
 	public ResponseEntity<Page<User>> page(@RequestBody IPage<IUser> pageView) {
 		return new ResponseEntity<Page<User>>(userService.query(pageView, null), HttpStatus.OK);
 	}
 
 	@PostMapping("/save")
 	@LogOperation("save")
-	@ApiOperation(value = "save")
+	@ApiOperation(value = "用户保存")
 	public ResponseEntity<User> save(@RequestBody IUser view) {
 		return new ResponseEntity<User>(userService.saveOne(view), HttpStatus.OK);
 	}
 
+	@GetMapping("/{id}")
+	@ApiOperation(value = "用户详情")
+	public ResponseEntity<User> info(@PathVariable String id) {
+		return new ResponseEntity<User>(userService.findOne(id), HttpStatus.OK);
+	}
 }

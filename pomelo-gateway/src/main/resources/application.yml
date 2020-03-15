@@ -1,0 +1,31 @@
+server:
+   port: 8000
+eureka:
+   client:
+      serviceUrl:
+         defaultZone: http://pomelo:pomelo@localhost:8760/eureka/
+   instance:
+      prefer-ip-Address: true
+spring:
+   application:
+      name: pomelo-gateway
+   cloud:
+      gateway:
+         globalcors: 
+            cors-configurations:
+               '[/**]':
+                  allowedOrigins: "https://docs.spring.io"
+         discovery:
+            locator:
+               enabled: false
+               lowerCaseServiceId: true
+         routes:
+         -  id: pomelo-user-server
+            uri: lb://POMELO-USER-SERVER
+            predicates:
+            - Path=/user/**
+            filters:
+            # 去掉/user/ 比如访问url是/user/test 经过gateway后，后面服务拿到的就只有/test
+            # - StripPrefix=1
+logging:
+   path: logs

@@ -53,5 +53,6 @@
 		<module>pomelo-user-server</module>
     <module>pomelo-user-sdk</module>
     <module>pomelo-log-sdk</module>
+    <module>pomelo-gateway</module>
   </modules>
 </project>
