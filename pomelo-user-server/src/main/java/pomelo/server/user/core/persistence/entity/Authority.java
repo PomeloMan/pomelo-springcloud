@@ -13,8 +13,12 @@ public class Authority extends VersionEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private String name;
-	private String url;
+	private String name; // 权限标识
+	private String displayName; // 权限名称
+	private String url; // 权限地址
+	private String parentName; // 父权限标识
+	private Integer sequence; // 权限顺序
+	private String icon; // 权限图标
 
 	public Authority(String name) {
 		super();
@@ -59,12 +63,44 @@ public class Authority extends VersionEntity implements Serializable {
 		this.name = name;
 	}
 
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
 	public String getUrl() {
 		return url;
 	}
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public String getParentName() {
+		return parentName;
+	}
+
+	public void setParentName(String parentName) {
+		this.parentName = parentName;
+	}
+
+	public Integer getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(Integer sequence) {
+		this.sequence = sequence;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
 	}
 
 }

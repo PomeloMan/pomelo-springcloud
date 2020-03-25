@@ -22,14 +22,14 @@ public interface IAuthorityService {
 	 * @param view
 	 * @return
 	 */
-	Collection<Authority> query(IAuthority view);
+	Collection<IAuthority> query(IAuthority view);
 
 	/**
 	 * @param view
 	 * @param pageable
 	 * @return
 	 */
-	Page<Authority> query(IPage<IAuthority> pageView, Pageable pageable);
+	Page<IAuthority> query(IPage<IAuthority> pageView, Pageable pageable);
 
 	/**
 	 * @param view
@@ -51,4 +51,11 @@ public interface IAuthorityService {
 	 */
 	@Transactional
 	Collection<Authority> save(Collection<Authority> entities);
+
+	/**
+	 * @param ids
+	 * @return
+	 */
+	@Transactional
+	void delete(Collection<String> ids);
 }

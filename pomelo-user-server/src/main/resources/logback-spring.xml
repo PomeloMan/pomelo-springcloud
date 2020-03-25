@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-	<!-- <include resource="org/springframework/boot/logging/logback/base.xml"/> -->
+	<include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+	<springProperty name="LOG_PATH" source="logging.path" defaultValue="logs" />
 	<property name="PATTERN"
 		value="%d{yyyy-MM-dd HH:mm:ss} %-4relative [%thread] %-5level %logger{35} [%c line:%L] - %msg%n" />
 	<property name="MAX_HISTORY" value="30" />

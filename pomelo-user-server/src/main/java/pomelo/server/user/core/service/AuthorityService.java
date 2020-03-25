@@ -16,16 +16,21 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import pomelo.server.user.core.enums.Status;
 import pomelo.server.user.core.persistence.entity.Authority;
 import pomelo.server.user.core.persistence.repo.AuthorityRepository;
 import pomelo.server.user.core.service.interfaces.IAuthorityService;
 import pomelo.server.user.core.utils.BeanUtils;
 import pomelo.server.user.core.utils.DateUtil;
+import pomelo.server.user.core.utils.PageableUtil;
 import pomelo.server.user.core.view.IAuthority;
 import pomelo.server.user.core.view.IPage;
 
@@ -37,29 +42,25 @@ public class AuthorityService implements IAuthorityService {
 	@Autowired
 	AuthorityRepository authorityRep;
 
-	private Specification<Authority> getQueryClause(IAuthority view) {
+	private Specification<Authority> getQueryClause(final IAuthority _view) {
 		return new Specification<Authority>() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public Predicate toPredicate(Root<Authority> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-
+				IAuthority view = _view;
 				if (view == null) {
 					if (logger.isDebugEnabled()) {
-						logger.debug(view);
+						logger.debug("The query condition is empty!");
 					}
-					return null;
+					view = new IAuthority();
 				}
-
-				String search = view.getSearch();
-
-				String name = null;
 				Authority authority = BeanUtils.transform(view, Authority.class);
-				if (authority != null) {
-					name = authority.getName();
-				}
 
 				List<Predicate> restrictions = new ArrayList<Predicate>();
+				restrictions.add(builder.conjunction()); // where 1=1
+				// search
+				String search = view.getSearch(); // 关键字查询
 				if (StringUtils.isNotEmpty(search)) {
 					Predicate fuzzyPredicate = null;
 					try {
@@ -70,29 +71,41 @@ public class AuthorityService implements IAuthorityService {
 					}
 					restrictions.add(fuzzyPredicate);
 				}
-
-				if (StringUtils.isNotEmpty(name)) {
-					Predicate likePredicate = builder.like(root.get("name"), "%" + name + "%");
+				// name
+				if (StringUtils.isNotEmpty(authority.getName())) {
+					Predicate likePredicate = builder.like(root.get("name"), "%" + authority.getName() + "%");
 					restrictions.add(likePredicate);
 				}
+				// parent_name
+				if (StringUtils.isNotEmpty(authority.getParentName())) {
+					Predicate equalPredicate = builder.equal(root.get("parentName"), authority.getParentName());
+					restrictions.add(equalPredicate);
+				}
+
+				restrictions.add(builder.notEqual(root.get("status"), Status.Deleted));
 
 				query.where(builder.and(restrictions.toArray(new Predicate[restrictions.size()])));
-				return query.getGroupRestriction();
+				query.orderBy(builder.asc(root.get("sequence"))); // order by authority0_.sequence asc
+				return query.getRestriction();
 			}
 		};
 	}
 
 	@Override
-	public Collection<Authority> query(IAuthority view) {
-		return authorityRep.findAll(getQueryClause(view));
+	public Collection<IAuthority> query(IAuthority view) {
+		Collection<Authority> list = authorityRep.findAll(getQueryClause(view));
+		return BeanUtils.transform(list, IAuthority.class);
 	}
 
 	@Override
-	public Page<Authority> query(IPage<IAuthority> pageView, Pageable pageable) {
-		if (pageable == null) {
-			pageable = pageView.getPageable();
+	public Page<IAuthority> query(IPage<IAuthority> pageView, Pageable pageable) {
+		if (pageable.getSort().isUnsorted()) {
+			pageable = PageableUtil.getPageRequest(pageView.getPage(), pageView.getSize(),
+					new Sort(Direction.ASC, "sequence"));
 		}
-		return authorityRep.findAll(getQueryClause(pageView.getObject()), pageable);
+		Page<Authority> page = authorityRep.findAll(getQueryClause(pageView.getObject()), pageable);
+		List<IAuthority> icontent = BeanUtils.transform(page.getContent(), IAuthority.class);
+		return new PageImpl<IAuthority>(icontent, page.getPageable(), page.getTotalElements());
 	}
 
 	@Override
@@ -116,6 +129,11 @@ public class AuthorityService implements IAuthorityService {
 		List<Authority> result = new ArrayList<Authority>();
 		entities.stream().forEach(entity -> result.add(saveOne(entity)));
 		return result;
+	}
+
+	@Override
+	public void delete(Collection<String> ids) {
+		authorityRep.deleteByIds(ids, Status.Deleted);
 	}
 
 }

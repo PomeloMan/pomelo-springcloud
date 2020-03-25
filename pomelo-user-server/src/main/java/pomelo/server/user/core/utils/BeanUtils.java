@@ -1,6 +1,7 @@
 package pomelo.server.user.core.utils;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class BeanUtils<S, T> {
@@ -16,7 +17,7 @@ public class BeanUtils<S, T> {
 		return target;
 	}
 
-	public static <S, T> Collection<T> transform(Collection<S> sources, Class<T> targetClass,
+	public static <S, T> List<T> transform(Collection<S> sources, Class<T> targetClass,
 			String... ignoreProperties) {
 		return sources.stream().map(source -> {
 			return transform(source, targetClass, ignoreProperties);

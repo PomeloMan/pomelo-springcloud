@@ -16,4 +16,12 @@ public class IAuthority extends Authority {
 		this.search = search;
 	}
 
+	// 状态信息
+	public String getStatusDesc() {
+		return this.status.getDescription();
+	}
+
+	public int getStatusCode() {
+		return this.status.getCode();
+	}
 }

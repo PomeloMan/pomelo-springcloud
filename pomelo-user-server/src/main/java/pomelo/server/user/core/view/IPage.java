@@ -9,8 +9,6 @@ import pomelo.server.user.core.utils.PageableUtil;
 
 public class IPage<O> {
 
-	private Pageable pageable;
-
 	int page;
 	int size;
 
@@ -70,17 +68,23 @@ public class IPage<O> {
 	}
 
 	public Pageable getPageable() {
-		Sort sort = null;
-		if (pageable == null) {
-			if (StringUtils.isNotEmpty(getOrder()) && StringUtils.isNoneEmpty(getDir())) {
-				sort = new Sort(Direction.fromString(getDir()), getOrder());
-			}
-		}
-		pageable = PageableUtil.getPageRequest(getPage(), getSize(), sort);
-		return pageable;
+		return getPageable(getDir(), getOrder());
 	}
 
-	public void setPageable(Pageable pageable) {
-		this.pageable = pageable;
+	public Pageable getPageable(String dir, String order) {
+		Sort sort = Sort.unsorted();
+		if (StringUtils.isNoneEmpty(dir) && StringUtils.isNoneEmpty(order)) {
+			sort = new Sort(Direction.valueOf(dir), order);
+		}
+		return PageableUtil.getPageRequest(getPage(), getSize(), sort);
 	}
+
+	public Pageable getPageable(Direction dir, String order) {
+		Sort sort = Sort.unsorted();
+		if (dir != null && StringUtils.isNoneEmpty(order)) {
+			sort = new Sort(dir, order);
+		}
+		return PageableUtil.getPageRequest(getPage(), getSize(), sort);
+	}
+
 }

@@ -41,3 +41,6 @@ spring:
 logging:
    config: classpath:logback-spring.xml
    path: logs
+cors:
+   exposed-headers: Autherication
+   allowed-origins: http://localhost:8082
