@@ -6,4 +6,4 @@ VOLUME /tmp
 ADD target/pomelo-eureka-server-0.0.1.jar eureka-server.jar 
 # 运行
 RUN bash -c 'touch /eureka-server.jar'
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/eureka-server.jar"]
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/eureka-server.jar","--spring.profiles.active=single"]
