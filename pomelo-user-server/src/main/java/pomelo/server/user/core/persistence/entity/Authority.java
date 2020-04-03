@@ -19,6 +19,7 @@ public class Authority extends VersionEntity implements Serializable {
 	private String parentName; // 父权限标识
 	private Integer sequence; // 权限顺序
 	private String icon; // 权限图标
+	private Integer level; // 权限分级（1：主菜单，2：子菜单，3：菜单权限（增删改查））
 
 	public Authority(String name) {
 		super();
@@ -101,6 +102,14 @@ public class Authority extends VersionEntity implements Serializable {
 
 	public void setIcon(String icon) {
 		this.icon = icon;
+	}
+
+	public Integer getLevel() {
+		return level;
+	}
+
+	public void setLevel(Integer level) {
+		this.level = level;
 	}
 
 }

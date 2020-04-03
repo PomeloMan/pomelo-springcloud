@@ -15,6 +15,6 @@ public interface AuthorityRepository extends CrudRepository<Authority, String>, 
 
 	@Modifying
 	@Query(value = "update Authority a set a.status = :status where a.name in :ids")
-	void deleteByIds(@Param("ids") Collection<String> ids, @Param("status") Status status);
+	void updateStatusByIds(@Param("ids") Collection<String> ids, @Param("status") Status status);
 
 }

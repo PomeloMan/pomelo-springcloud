@@ -67,4 +67,12 @@ public abstract class DefaultEntity {
 		this.modifiedDate = modifiedDate;
 	}
 
+	// 状态信息
+	public String getStatusDesc() {
+		return this.status.getDescription();
+	}
+
+	public int getStatusCode() {
+		return this.status.getCode();
+	}
 }

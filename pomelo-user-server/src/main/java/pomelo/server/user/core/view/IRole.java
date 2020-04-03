@@ -15,5 +15,4 @@ public class IRole extends Role {
 	public void setSearch(String search) {
 		this.search = search;
 	}
-
 }

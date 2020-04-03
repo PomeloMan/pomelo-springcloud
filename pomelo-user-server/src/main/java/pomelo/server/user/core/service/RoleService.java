@@ -16,11 +16,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import pomelo.server.user.core.enums.Status;
 import pomelo.server.user.core.persistence.entity.Role;
 import pomelo.server.user.core.persistence.repo.RoleRepository;
 import pomelo.server.user.core.service.interfaces.IRoleService;
@@ -37,29 +39,24 @@ public class RoleService implements IRoleService {
 	@Autowired
 	RoleRepository roleRep;
 
-	private Specification<Role> getQueryClause(IRole view) {
+	private Specification<Role> getQueryClause(IRole _view) {
 		return new Specification<Role>() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public Predicate toPredicate(Root<Role> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-
+				IRole view = _view;
 				if (view == null) {
 					if (logger.isDebugEnabled()) {
-						logger.debug(view);
+						logger.debug("The query condition is empty!");
 					}
-					return null;
-				}
-
-				String search = view.getSearch();
-
-				String name = null;
-				Role role = BeanUtils.transform(view, Role.class);
-				if (role != null) {
-					name = role.getName();
+					view = new IRole();
 				}
 
 				List<Predicate> restrictions = new ArrayList<Predicate>();
+				restrictions.add(builder.conjunction()); // where 1=1
+
+				String search = view.getSearch();
 				if (StringUtils.isNotEmpty(search)) {
 					Predicate fuzzyPredicate = null;
 					try {
@@ -70,12 +67,13 @@ public class RoleService implements IRoleService {
 					}
 					restrictions.add(fuzzyPredicate);
 				}
-
-				if (StringUtils.isNotEmpty(name)) {
-					Predicate likePredicate = builder.like(root.get("name"), "%" + name + "%");
+				// name
+				if (StringUtils.isNotEmpty(view.getName())) {
+					Predicate likePredicate = builder.like(root.get("name"), "%" + view.getName() + "%");
 					restrictions.add(likePredicate);
 				}
 
+				restrictions.add(builder.notEqual(root.get("status"), Status.Deleted));
 				query.where(builder.and(restrictions.toArray(new Predicate[restrictions.size()])));
 				return query.getRestriction();
 			}
@@ -83,16 +81,24 @@ public class RoleService implements IRoleService {
 	}
 
 	@Override
-	public Collection<Role> query(IRole view) {
-		return roleRep.findAll(getQueryClause(view));
+	public IRole findOne(String id) {
+		return BeanUtils.transform(roleRep.findById(id).orElse(null), IRole.class);
 	}
 
 	@Override
-	public Page<Role> query(IPage<IRole> pageView, Pageable pageable) {
+	public Collection<IRole> query(IRole view) {
+		Collection<Role> list = roleRep.findAll(getQueryClause(view));
+		return BeanUtils.transform(list, IRole.class);
+	}
+
+	@Override
+	public Page<IRole> query(IPage<IRole> pageView, Pageable pageable) {
 		if (pageable == null) {
 			pageable = pageView.getPageable();
 		}
-		return roleRep.findAll(getQueryClause(pageView.getObject()), pageable);
+		Page<Role> page = roleRep.findAll(getQueryClause(pageView.getObject()), pageable);
+		List<IRole> icontent = BeanUtils.transform(page.getContent(), IRole.class);
+		return new PageImpl<IRole>(icontent, page.getPageable(), page.getTotalElements());
 	}
 
 	@Override
@@ -118,4 +124,8 @@ public class RoleService implements IRoleService {
 		return result;
 	}
 
+	@Override
+	public void delete(Collection<String> ids) {
+		roleRep.updateStatusByIds(ids, Status.Deleted);
+	}
 }

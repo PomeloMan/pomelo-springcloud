@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.logging.Log;
@@ -55,8 +56,7 @@ public class AuthorityService implements IAuthorityService {
 					}
 					view = new IAuthority();
 				}
-				Authority authority = BeanUtils.transform(view, Authority.class);
-
+//				Authority authority = BeanUtils.transform(view, Authority.class);
 				List<Predicate> restrictions = new ArrayList<Predicate>();
 				restrictions.add(builder.conjunction()); // where 1=1
 				// search
@@ -72,14 +72,22 @@ public class AuthorityService implements IAuthorityService {
 					restrictions.add(fuzzyPredicate);
 				}
 				// name
-				if (StringUtils.isNotEmpty(authority.getName())) {
-					Predicate likePredicate = builder.like(root.get("name"), "%" + authority.getName() + "%");
+				if (StringUtils.isNotEmpty(view.getName())) {
+					Predicate likePredicate = builder.like(root.get("name"), "%" + view.getName() + "%");
 					restrictions.add(likePredicate);
 				}
 				// parent_name
-				if (StringUtils.isNotEmpty(authority.getParentName())) {
-					Predicate equalPredicate = builder.equal(root.get("parentName"), authority.getParentName());
+				if (StringUtils.isNotEmpty(view.getParentName())) {
+					Predicate equalPredicate = builder.equal(root.get("parentName"), view.getParentName());
 					restrictions.add(equalPredicate);
+				}
+				// level
+				if (CollectionUtils.isNotEmpty(view.getLevels())) {
+					CriteriaBuilder.In<Integer> in = builder.in(root.get("level"));
+					view.getLevels().stream().forEach(item -> {
+						in.value(item);
+					});
+					restrictions.add(in);
 				}
 
 				restrictions.add(builder.notEqual(root.get("status"), Status.Deleted));
@@ -133,7 +141,7 @@ public class AuthorityService implements IAuthorityService {
 
 	@Override
 	public void delete(Collection<String> ids) {
-		authorityRep.deleteByIds(ids, Status.Deleted);
+		authorityRep.updateStatusByIds(ids, Status.Deleted);
 	}
 
 }

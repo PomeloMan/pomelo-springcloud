@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaBuilder.In;
@@ -22,11 +23,14 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import pomelo.server.user.core.enums.Status;
+import pomelo.server.user.core.persistence.entity.Authority;
 import pomelo.server.user.core.persistence.entity.Role;
 import pomelo.server.user.core.persistence.entity.User;
 import pomelo.server.user.core.persistence.repo.UserRepository;
@@ -101,6 +105,7 @@ public class UserService implements IUserService {
 					}
 					restrictions.add(in);
 				}
+				restrictions.add(builder.notEqual(root.get("status"), Status.Deleted));
 				// add where condition
 				query.where(builder.and(restrictions.toArray(new Predicate[restrictions.size()])));
 				return query.getRestriction();
@@ -109,8 +114,14 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public User findOne(String username) {
-		return userRep.findById(username).orElse(null);
+	public IUser findOne(String username) {
+		User user = userRep.findOneById(username);
+		IUser iuser = BeanUtils.transform(user, IUser.class);
+		Set<Role> roles = userRep.findRolesByUsername(username);
+		Set<Authority> auths = userRep.findAuthoriesByUsername(username);
+		iuser.setRoles(roles);
+		iuser.setAuthorities(auths);
+		return iuser;
 	}
 
 	@Override
@@ -124,11 +135,10 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public Page<User> query(IPage<IUser> pageView, Pageable pageable) {
-		if (pageable == null) {
-			pageable = pageView.getPageable();
-		}
-		return userRep.findAll(getQueryClause(pageView.getObject()), pageable);
+	public Page<IUser> query(IPage<IUser> pageView, Pageable pageable) {
+		Page<User> page = userRep.findAll(getQueryClause(pageView.getObject()), pageable);
+		List<IUser> icontent = BeanUtils.transform(page.getContent(), IUser.class);
+		return new PageImpl<IUser>(icontent, page.getPageable(), page.getTotalElements());
 	}
 
 	@Override
@@ -154,4 +164,8 @@ public class UserService implements IUserService {
 		return result;
 	}
 
+	@Override
+	public void delete(Collection<String> ids) {
+		userRep.updateStatusByIds(ids, Status.Deleted);
+	}
 }

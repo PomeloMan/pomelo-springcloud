@@ -15,8 +15,6 @@ public class IPage<O> {
 	String order;
 	String dir;
 
-	String search;
-
 	O object;
 
 	public O getObject() {
@@ -41,14 +39,6 @@ public class IPage<O> {
 
 	public void setSize(int size) {
 		this.size = size;
-	}
-
-	public String getSearch() {
-		return search;
-	}
-
-	public void setSearch(String search) {
-		this.search = search;
 	}
 
 	public String getOrder() {

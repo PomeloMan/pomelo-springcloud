@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import pomelo.server.user.core.enums.RoleGroup;
+
 @Entity
 @Table(name = "sys_role")
 public class Role extends VersionEntity implements Serializable {
@@ -17,6 +19,8 @@ public class Role extends VersionEntity implements Serializable {
 
 	@Id
 	private String name;
+	private String displayName;
+	private RoleGroup roleGroup = RoleGroup.SYS_ADMIN;
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Collection<Authority> authorities;
@@ -64,6 +68,22 @@ public class Role extends VersionEntity implements Serializable {
 		this.name = name;
 	}
 
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
+	public RoleGroup getRoleGroup() {
+		return roleGroup;
+	}
+
+	public void setRoleGroup(RoleGroup roleGroup) {
+		this.roleGroup = roleGroup;
+	}
+
 	public Collection<Authority> getAuthorities() {
 		return authorities;
 	}
@@ -72,4 +92,12 @@ public class Role extends VersionEntity implements Serializable {
 		this.authorities = authorities;
 	}
 
+	// 角色组信息
+	public String getRoleGroupDesc() {
+		return this.roleGroup.getDescription();
+	}
+
+	public int getRoleGroupCode() {
+		return this.roleGroup.getCode();
+	}
 }

@@ -17,7 +17,7 @@ public interface IUserService {
 	 * @param username
 	 * @return
 	 */
-	User findOne(String username);
+	IUser findOne(String username);
 
 	/**
 	 * 悲观锁，此查询方法会执行数据库行锁
@@ -40,7 +40,7 @@ public interface IUserService {
 	 * @param pageable
 	 * @return
 	 */
-	Page<User> query(IPage<IUser> pageView, Pageable pageable);
+	Page<IUser> query(IPage<IUser> pageView, Pageable pageable);
 
 	/**
 	 * @param view
@@ -62,4 +62,11 @@ public interface IUserService {
 	 */
 	@Transactional
 	Collection<User> save(Collection<User> entities);
+
+	/**
+	 * @param ids
+	 * @return
+	 */
+	@Transactional
+	void delete(Collection<String> ids);
 }

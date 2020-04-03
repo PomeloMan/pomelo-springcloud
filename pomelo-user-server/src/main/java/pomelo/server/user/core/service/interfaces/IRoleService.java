@@ -19,17 +19,23 @@ import pomelo.server.user.core.view.IRole;
 public interface IRoleService {
 
 	/**
+	 * @param id
+	 * @return
+	 */
+	IRole findOne(String id);
+
+	/**
 	 * @param view
 	 * @return
 	 */
-	Collection<Role> query(IRole view);
+	Collection<IRole> query(IRole view);
 
 	/**
 	 * @param view
 	 * @param pageable
 	 * @return
 	 */
-	Page<Role> query(IPage<IRole> pageView, Pageable pageable);
+	Page<IRole> query(IPage<IRole> pageView, Pageable pageable);
 
 	/**
 	 * @param view
@@ -51,4 +57,11 @@ public interface IRoleService {
 	 */
 	@Transactional
 	Collection<Role> save(Collection<Role> entities);
+
+	/**
+	 * @param ids
+	 * @return
+	 */
+	@Transactional
+	void delete(Collection<String> ids);
 }
