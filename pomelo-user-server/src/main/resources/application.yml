@@ -7,6 +7,8 @@ eureka:
    instance:
       prefer-ip-Address: true
 spring:
+   profiles:
+      active: dev
    application:
       name: pomelo-user-server
    http:
@@ -18,29 +20,9 @@ spring:
          max-file-size: 10M
          max-request-size: 20M
          defaultEncoding: UTF-8
-   datasource:
-      url: jdbc:postgresql://localhost:5432/pomelo-user
-      username: postgres
-      password: 219003
-      driver-class-name: org.postgresql.Driver
-      type: com.alibaba.druid.pool.DruidDataSource # http://localhost:8100/druid/index.html
-      druid:
-         stat-view-servlet:
-            login-username: admin
-            login-password: admin
-   jpa:
-      show-sql: true
-      hibernate:
-         ddl-auto: update
-      properties:
-         hibernate:
-            temp:
-               use_jdbc_metadata_defaults: false
-            dialect: org.hibernate.dialect.PostgreSQLDialect
-            format_sql: true
 logging:
    config: classpath:logback-spring.xml
    path: logs
 cors:
    exposed-headers: Autherication
-   allowed-origins: http://localhost:8082
+   allowed-origins: http://localhost:8000
