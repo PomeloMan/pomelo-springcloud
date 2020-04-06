@@ -1,7 +1,7 @@
 eureka:
    client:
       serviceUrl:
-         defaultZone: http://pomelo:pomelo@localhost:8760/eureka/
+         defaultZone: http://pomelo:pomelo@192.168.99.100:8760/eureka/
    instance:
       prefer-ip-Address: true
 spring:
