@@ -29,6 +29,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import pomelo.server.user.config.properties.FileServerProp;
 import pomelo.server.user.core.enums.Status;
 import pomelo.server.user.core.persistence.entity.Authority;
 import pomelo.server.user.core.persistence.entity.Role;
@@ -47,6 +48,8 @@ public class UserService implements IUserService {
 
 	@Autowired
 	ConfigurableApplicationContext context;
+	@Autowired
+	FileServerProp fileServerProp;
 
 	@Autowired
 	UserRepository userRep;
@@ -121,6 +124,7 @@ public class UserService implements IUserService {
 		Set<Authority> auths = userRep.findAuthoriesByUsername(username);
 		iuser.setRoles(roles);
 		iuser.setAuthorities(auths);
+		iuser.setAvatar(fileServerProp.getUserAvatarUrl() + iuser.getAvatar());
 		return iuser;
 	}
 
@@ -138,6 +142,9 @@ public class UserService implements IUserService {
 	public Page<IUser> query(IPage<IUser> pageView, Pageable pageable) {
 		Page<User> page = userRep.findAll(getQueryClause(pageView.getObject()), pageable);
 		List<IUser> icontent = BeanUtils.transform(page.getContent(), IUser.class);
+		icontent.stream().forEach(iuser -> {
+			iuser.setAvatar(fileServerProp.getUserAvatarUrl() + iuser.getAvatar());
+		});
 		return new PageImpl<IUser>(icontent, page.getPageable(), page.getTotalElements());
 	}
 

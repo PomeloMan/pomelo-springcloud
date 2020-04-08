@@ -1,5 +1,5 @@
 server:
-   port: 8100
+   port: 8200
 spring:
    profiles:
       active: dev
@@ -17,6 +17,3 @@ spring:
 logging:
    config: classpath:logback-spring.xml
    path: logs
-file-server:
-   host: http://127.0.0.1:8200/
-   user-avatar-url: http://127.0.0.1:8200/file/user/avatar/
