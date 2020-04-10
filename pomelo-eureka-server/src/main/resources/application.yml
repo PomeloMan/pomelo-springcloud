@@ -1,3 +1,5 @@
 spring:
    application:
       name: eureka-server-high-availability
+   profiles:
+      active: single
